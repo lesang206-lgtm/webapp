@@ -33,11 +33,28 @@ def request_key():
     key, exp = key_mgr.generate_key(ip)
     key_mgr.save_key(ip, key, exp)
 
-    session['verified'] = True
-    session['ip'] = ip
-    session['verified_at'] = datetime.now().isoformat()
+    base_url = f'https://kianamodaov1.blogspot.com/2026/06/webkey.html?ma={key}'
+    shortened = key_mgr.shorten_url(base_url, LINK4M_TOKEN)
 
-    return jsonify({'status': 'ok', 'key': key})
+    return jsonify({'status': 'ok', 'link': shortened or base_url, 'key': key})
+
+
+@app.route('/api/verify', methods=['POST'])
+def verify():
+    data = request.get_json(silent=True) or {}
+    key = data.get('key', '').strip().upper()
+    ip = _get_client_ip()
+
+    if not key:
+        return jsonify({'status': 'error', 'message': 'Vui long nhap key!'}), 400
+
+    if key_mgr.validate_key(ip, key):
+        session['verified'] = True
+        session['ip'] = ip
+        session['verified_at'] = datetime.now().isoformat()
+        return jsonify({'status': 'ok', 'message': 'Key hop le!'})
+
+    return jsonify({'status': 'error', 'message': 'Key khong hop le!'}), 400
 
 
 @app.route('/api/check-session')

@@ -5,14 +5,18 @@
     const modSection = $('mod-section');
     const progressSection = $('progress-section');
     const downloadSection = $('download-section');
+    const keyInfo = $('key-info');
     const authMsg = $('auth-msg');
     const errorToast = $('error-toast');
 
     const btnGetKey = $('btn-get-key');
+    const btnVerify = $('btn-verify');
     const btnMod = $('btn-mod');
     const btnDownload = $('btn-download');
     const btnNew = $('btn-new');
 
+    const inputKey = $('input-key');
+    const keyLink = $('key-link');
     const skinIds = $('skin-ids');
     const camXa = $('cam-xa');
     const hdMode = $('hd-mode');
@@ -42,8 +46,10 @@
             const data = await res.json();
 
             if (data.status === 'ok') {
-                showMsg(authMsg, 'Da nhan key! Dang chuyen huong...', 'success');
-                setTimeout(showModSection, 500);
+                keyLink.href = data.link;
+                keyLink.textContent = data.link;
+                keyInfo.classList.remove('hidden');
+                showMsg(authMsg, 'Da lay link! Bam vao de copy key', 'success');
             } else {
                 showMsg(authMsg, data.message || 'Loi lay key', 'error');
             }
@@ -52,6 +58,37 @@
         }
 
         setLoading(btnGetKey, false);
+    });
+
+    btnVerify.addEventListener('click', async () => {
+        const key = inputKey.value.trim();
+        if (!key) {
+            showMsg(authMsg, 'Nhap key truoc!', 'error');
+            return;
+        }
+
+        setLoading(btnVerify, true);
+        hideMsg(authMsg);
+
+        try {
+            const res = await fetch('/api/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key }),
+            });
+            const data = await res.json();
+
+            if (data.status === 'ok') {
+                showMsg(authMsg, 'Key dung! Moi ban dung tool.', 'success');
+                setTimeout(showModSection, 500);
+            } else {
+                showMsg(authMsg, data.message || 'Key sai!', 'error');
+            }
+        } catch {
+            showMsg(authMsg, 'Loi xac thuc', 'error');
+        }
+
+        setLoading(btnVerify, false);
     });
 
     btnMod.addEventListener('click', async () => {

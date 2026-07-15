@@ -26,7 +26,10 @@ class KeyManager:
             json.dump(self.db, f, indent=2)
 
     def generate_key(self, ip):
-        key = 'KM' + secrets.token_hex(5).upper()
+        ngay = int(datetime.now().day)
+        key1 = str(ngay * 27 + 27)
+        rand = secrets.token_hex(2).upper()
+        key = f'NDK{key1}{rand}'
         expiration = datetime.now().replace(hour=23, minute=59, second=59, microsecond=0)
         return key, expiration
 
@@ -36,7 +39,6 @@ class KeyManager:
             entry = self.db[key]
             exp = datetime.fromisoformat(entry['expiration'])
             if exp > datetime.now():
-                entry['ip'] = ip
                 entry['last_used'] = datetime.now().isoformat()
                 self._save_db()
                 return True

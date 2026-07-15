@@ -21,13 +21,28 @@
             <section id="auth-section" class="card">
                 <div class="card-header">
                     <span class="step-badge">1</span>
-                    <h2>Bat dau</h2>
+                    <h2>Lay Key</h2>
                 </div>
-                <p class="card-desc">Bam de nhan key mien phi (het han trong ngay)</p>
+                <p class="card-desc">Nhan 1 de lay key mien phi</p>
+
                 <button id="btn-get-key" class="btn btn-primary btn-full">
-                    <span class="btn-text">Lay Key Mien Phi</span>
+                    <span class="btn-text">Nhan 1 de lay key (Free)</span>
                     <span class="btn-loading hidden">Dang xu ly...</span>
                 </button>
+
+                <div id="key-info" class="key-info hidden">
+                    <div class="key-link-box">
+                        <p>Bam vao link de lay key:</p>
+                        <a id="key-link" href="#" target="_blank" rel="noopener"></a>
+                        <p class="hint">Sau khi copy key, paste vao o ben duoi</p>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <input type="text" id="input-key" placeholder="Key: " autocomplete="off">
+                    <button id="btn-verify" class="btn btn-secondary">Xac Nhan</button>
+                </div>
+
                 <div id="auth-msg" class="msg hidden"></div>
             </section>
 
