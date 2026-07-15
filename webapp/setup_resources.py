@@ -33,10 +33,31 @@ def extract_zip(zip_path, extract_to):
         zf.extractall(extract_to)
 
 
-def setup_kiana_aov():
-    if KIANA_AOV_DIR.exists() and any(KIANA_AOV_DIR.iterdir()):
-        print("Resources already exists, skipping...")
+def fix_nested_structure():
+    res_dir = KIANA_AOV_DIR / 'Resources'
+    if not res_dir.exists():
         return
+
+    for version_dir in res_dir.iterdir():
+        if not version_dir.is_dir():
+            continue
+        inner_res = version_dir / 'Resources'
+        if inner_res.exists():
+            print(f"  Fixing nested structure in {version_dir.name}...")
+            for item in inner_res.iterdir():
+                dest = version_dir / item.name
+                if dest.exists():
+                    shutil.rmtree(dest)
+                shutil.move(str(item), str(dest))
+            shutil.rmtree(inner_res)
+
+
+def setup_kiana_aov():
+    if KIANA_AOV_DIR.exists():
+        res_dir = KIANA_AOV_DIR / 'Resources'
+        if res_dir.exists() and any(res_dir.iterdir()):
+            print("Resources already exists, skipping...")
+            return
 
     print("Downloading resources...")
     zip_path = BASE_DIR / 'kiana_aov.zip'
@@ -48,6 +69,8 @@ def setup_kiana_aov():
             if item.is_dir() and 'KIANA' in item.name.upper():
                 item.rename(KIANA_AOV_DIR)
                 break
+
+    fix_nested_structure()
 
     if zip_path.exists():
         os.remove(zip_path)
