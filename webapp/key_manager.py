@@ -1,7 +1,6 @@
 import json
-import hashlib
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
 import requests
@@ -27,35 +26,39 @@ class KeyManager:
             json.dump(self.db, f, indent=2)
 
     def generate_key(self, ip):
-        now = datetime.now()
-        day_part = now.day * 31 + 7
-        rand_part = secrets.token_hex(3)
-        raw = f'km-{day_part}-{rand_part}-{ip}'
-        key_hash = hashlib.md5(raw.encode()).hexdigest()[:8].upper()
-        key = f'KM{day_part}{key_hash}'
-        expiration = now.replace(hour=23, minute=59, second=59, microsecond=0)
+        key = 'KM' + secrets.token_hex(5).upper()
+        expiration = datetime.now().replace(hour=23, minute=59, second=59, microsecond=0)
         return key, expiration
 
     def validate_key(self, ip, key):
-        calculated_key, exp = self.generate_key(ip)
-        if calculated_key == key and exp > datetime.now():
-            self.save_key(ip, key, exp)
-            return True
+        key = key.strip().upper()
+        if key in self.db:
+            entry = self.db[key]
+            exp = datetime.fromisoformat(entry['expiration'])
+            if exp > datetime.now():
+                entry['ip'] = ip
+                entry['last_used'] = datetime.now().isoformat()
+                self._save_db()
+                return True
+            else:
+                del self.db[key]
+                self._save_db()
         return False
 
     def save_key(self, ip, key, expiration):
-        self.db[ip] = {
-            'key': key,
+        self.db[key] = {
+            'ip': ip,
             'expiration': expiration.isoformat(),
             'created': datetime.now().isoformat(),
         }
         self._save_db()
 
     def has_valid_key(self, ip):
-        if ip in self.db:
-            entry = self.db[ip]
+        now = datetime.now()
+        for key, entry in list(self.db.items()):
             exp = datetime.fromisoformat(entry['expiration'])
-            return exp > datetime.now()
+            if exp > now:
+                return True
         return False
 
     def shorten_url(self, url, token):
