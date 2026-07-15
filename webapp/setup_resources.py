@@ -33,50 +33,43 @@ def extract_zip(zip_path, extract_to):
         zf.extractall(extract_to)
 
 
-def ensure_correct_structure():
-    res_dir = KIANA_AOV_DIR / 'Resources'
-    if res_dir.exists() and any(res_dir.iterdir()):
-        return
+def find_resources_dir():
+    """Find where Resources folder ended up after extraction."""
+    # Check inside KIANA_AOV first
+    res_in_kiana = KIANA_AOV_DIR / 'Resources'
+    if res_in_kiana.exists() and any(res_in_kiana.iterdir()):
+        return res_in_kiana
 
-    base_res = BASE_DIR / 'Resources'
-    if base_res.exists():
-        print("  Moving Resources into KIANA_AOV...")
-        KIANA_AOV_DIR.mkdir(exist_ok=True)
-        if res_dir.exists():
-            shutil.rmtree(res_dir)
-        shutil.move(str(base_res), str(res_dir))
-        return
+    # Check at BASE_DIR level
+    res_in_base = BASE_DIR / 'Resources'
+    if res_in_base.exists() and any(res_in_base.iterdir()):
+        return res_in_base
 
-    for item in BASE_DIR.iterdir():
-        if item.is_dir() and item.name.upper() in ('RESOURCES', 'KIANA_AOV'):
-            continue
-        if item.is_dir() and 'RESOURCE' in item.name.upper():
-            print(f"  Moving {item.name} into KIANA_AOV...")
-            KIANA_AOV_DIR.mkdir(exist_ok=True)
-            dest = KIANA_AOV_DIR / 'Resources'
-            if dest.exists():
-                shutil.rmtree(dest)
-            shutil.move(str(item), str(dest))
-            return
+    # Search for any folder containing version numbers like "1.63.1"
+    for item in BASE_DIR.rglob('1.63.1'):
+        if item.is_dir():
+            return item.parent
 
-    raise Exception("Cannot find Resources after extraction")
+    return None
 
 
-def fix_double_nested():
-    res_dir = KIANA_AOV_DIR / 'Resources'
-    if not res_dir.exists():
-        return
-
-    for version_dir in res_dir.iterdir():
+def flatten_resources(src_res_dir):
+    """Ensure Resources dir has version folders directly inside, not nested."""
+    for version_dir in src_res_dir.iterdir():
         if not version_dir.is_dir():
             continue
+
+        # Check for double nesting: Resources/Resources/1.63.1/
         inner_res = version_dir / 'Resources'
-        if inner_res.exists():
-            print(f"  Fixing double nesting in {version_dir.name}...")
+        if inner_res.exists() and inner_res.is_dir():
+            print(f"  Flattening {version_dir.name}/Resources/...")
             for item in inner_res.iterdir():
                 dest = version_dir / item.name
                 if dest.exists():
-                    shutil.rmtree(dest)
+                    if dest.is_dir():
+                        shutil.rmtree(dest)
+                    else:
+                        dest.unlink()
                 shutil.move(str(item), str(dest))
             shutil.rmtree(inner_res)
 
@@ -85,6 +78,8 @@ def setup_kiana_aov():
     if KIANA_AOV_DIR.exists():
         res_dir = KIANA_AOV_DIR / 'Resources'
         if res_dir.exists() and any(res_dir.iterdir()):
+            # Check for double nesting and fix it
+            flatten_resources(res_dir)
             print("Resources already exists, skipping...")
             return
 
@@ -93,8 +88,23 @@ def setup_kiana_aov():
     download_gdrive_file(GDRIVE_KIANA_ID, zip_path)
     extract_zip(zip_path, BASE_DIR)
 
-    ensure_correct_structure()
-    fix_double_nested()
+    # Find where Resources ended up
+    res_dir = find_resources_dir()
+    if not res_dir:
+        raise Exception("Cannot find Resources after extraction")
+
+    # If Resources is at BASE_DIR level, move it into KIANA_AOV
+    if res_dir.parent == BASE_DIR:
+        print("  Moving Resources into KIANA_AOV...")
+        KIANA_AOV_DIR.mkdir(exist_ok=True)
+        dest = KIANA_AOV_DIR / 'Resources'
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.move(str(res_dir), str(dest))
+        res_dir = dest
+
+    # Flatten any double nesting
+    flatten_resources(res_dir)
 
     if zip_path.exists():
         os.remove(zip_path)
