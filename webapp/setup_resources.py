@@ -33,7 +33,36 @@ def extract_zip(zip_path, extract_to):
         zf.extractall(extract_to)
 
 
-def fix_nested_structure():
+def ensure_correct_structure():
+    res_dir = KIANA_AOV_DIR / 'Resources'
+    if res_dir.exists() and any(res_dir.iterdir()):
+        return
+
+    base_res = BASE_DIR / 'Resources'
+    if base_res.exists():
+        print("  Moving Resources into KIANA_AOV...")
+        KIANA_AOV_DIR.mkdir(exist_ok=True)
+        if res_dir.exists():
+            shutil.rmtree(res_dir)
+        shutil.move(str(base_res), str(res_dir))
+        return
+
+    for item in BASE_DIR.iterdir():
+        if item.is_dir() and item.name.upper() in ('RESOURCES', 'KIANA_AOV'):
+            continue
+        if item.is_dir() and 'RESOURCE' in item.name.upper():
+            print(f"  Moving {item.name} into KIANA_AOV...")
+            KIANA_AOV_DIR.mkdir(exist_ok=True)
+            dest = KIANA_AOV_DIR / 'Resources'
+            if dest.exists():
+                shutil.rmtree(dest)
+            shutil.move(str(item), str(dest))
+            return
+
+    raise Exception("Cannot find Resources after extraction")
+
+
+def fix_double_nested():
     res_dir = KIANA_AOV_DIR / 'Resources'
     if not res_dir.exists():
         return
@@ -43,7 +72,7 @@ def fix_nested_structure():
             continue
         inner_res = version_dir / 'Resources'
         if inner_res.exists():
-            print(f"  Fixing nested structure in {version_dir.name}...")
+            print(f"  Fixing double nesting in {version_dir.name}...")
             for item in inner_res.iterdir():
                 dest = version_dir / item.name
                 if dest.exists():
@@ -64,13 +93,8 @@ def setup_kiana_aov():
     download_gdrive_file(GDRIVE_KIANA_ID, zip_path)
     extract_zip(zip_path, BASE_DIR)
 
-    if not KIANA_AOV_DIR.exists():
-        for item in BASE_DIR.iterdir():
-            if item.is_dir() and 'KIANA' in item.name.upper():
-                item.rename(KIANA_AOV_DIR)
-                break
-
-    fix_nested_structure()
+    ensure_correct_structure()
+    fix_double_nested()
 
     if zip_path.exists():
         os.remove(zip_path)
