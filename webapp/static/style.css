@@ -388,6 +388,106 @@ textarea {
     display: none !important;
 }
 
+/* Search Results */
+.search-results {
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background: rgba(0,0,0,0.2);
+    margin-top: 6px;
+}
+
+.search-results:empty {
+    display: none;
+}
+
+.search-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+}
+
+.search-item:last-child {
+    border-bottom: none;
+}
+
+.search-item:hover {
+    background: rgba(108,92,231,0.1);
+}
+
+.search-skin {
+    font-size: 0.9em;
+    color: var(--text);
+}
+
+.search-hero {
+    font-size: 0.78em;
+    color: var(--text-dim);
+}
+
+.btn-add {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.btn-add:hover {
+    background: var(--primary-hover);
+}
+
+/* Tags */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 28px;
+}
+
+.tag-list:empty::after {
+    content: 'Chua chon skin nao';
+    color: var(--text-dim);
+    font-size: 0.85em;
+    font-style: italic;
+}
+
+.tag {
+    background: rgba(108,92,231,0.15);
+    border: 1px solid rgba(108,92,231,0.3);
+    color: #a29bfe;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tag-x {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--danger);
+    font-size: 1.1em;
+    line-height: 1;
+}
+
+.tag-x:hover {
+    color: #ff6b81;
+}
+
 /* Mobile */
 @media (max-width: 400px) {
     .app {

@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import secrets
 import threading
@@ -21,10 +22,50 @@ key_mgr = KeyManager(KEYS_DB)
 mod_runner = ModRunner(JOBS_DIR, V7_PY_PATH, KIANA_AOV_DIR)
 file_mgr = FileManager(FILE_MOD_DIR)
 
+HEROES = {}
+
+
+def load_skins():
+    global HEROES
+    if not SKINS_FILE.exists():
+        return
+    current_hero_id = None
+    with open(SKINS_FILE, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            m = re.match(r'^(\d+):\s*(.+)$', line)
+            if not m:
+                continue
+            code, name = m.group(1), m.group(2).strip()
+            if len(code) <= 3:
+                current_hero_id = code
+                HEROES[code] = {'name': name, 'skins': {}}
+            elif current_hero_id and current_hero_id in HEROES:
+                HEROES[current_hero_id]['skins'][code] = name
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/api/search')
+def api_search():
+    q = request.args.get('q', '').lower().strip()
+    if not q:
+        return jsonify([])
+    results = []
+    for hero_id, hero in HEROES.items():
+        if q in hero['name'].lower():
+            for sid, sname in hero['skins'].items():
+                results.append({'hero': hero['name'], 'hero_id': hero_id, 'skin_id': sid, 'skin_name': sname})
+            continue
+        for sid, sname in hero['skins'].items():
+            if q in sname.lower():
+                results.append({'hero': hero['name'], 'hero_id': hero_id, 'skin_id': sid, 'skin_name': sname})
+    return jsonify(results[:30])
 
 
 @app.route('/api/request-key', methods=['POST'])
@@ -134,5 +175,6 @@ def _get_progress(status):
 
 
 if __name__ == '__main__':
+    load_skins()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)

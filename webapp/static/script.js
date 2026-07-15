@@ -24,8 +24,14 @@
     const progressPct = $('progress-pct');
     const progressText = $('progress-text');
 
+    const skinSearch = $('skin-search');
+    const searchResults = $('search-results');
+    const selectedTags = $('selected-tags');
+
     let jobId = null;
     let pollTimer = null;
+    let searchTimer = null;
+    const selectedSkins = new Map();
 
     checkSession();
 
@@ -35,6 +41,52 @@
             const data = await res.json();
             if (data.verified) showModSection();
         } catch {}
+    }
+
+    skinSearch.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(doSearch, 300);
+    });
+
+    async function doSearch() {
+        const q = skinSearch.value.trim();
+        if (!q) { searchResults.innerHTML = ''; return; }
+        try {
+            const res = await fetch('/api/search?q=' + encodeURIComponent(q));
+            const items = await res.json();
+            searchResults.innerHTML = items.map(it => `
+                <div class="search-item">
+                    <div>
+                        <div class="search-skin">${it.skin_name}</div>
+                        <div class="search-hero">${it.hero} (${it.skin_id})</div>
+                    </div>
+                    <button class="btn-add" onclick="window._addSkin('${it.skin_id}','${it.hero} - ${it.skin_name}')">+</button>
+                </div>
+            `).join('');
+        } catch {}
+    }
+
+    window._addSkin = function(id, name) {
+        if (selectedSkins.has(id)) return;
+        selectedSkins.set(id, name);
+        renderTags();
+        syncTextarea();
+    };
+
+    window._removeSkin = function(id) {
+        selectedSkins.delete(id);
+        renderTags();
+        syncTextarea();
+    };
+
+    function renderTags() {
+        selectedTags.innerHTML = [...selectedSkins].map(([id, name]) =>
+            `<span class="tag">${name} <span class="tag-x" onclick="window._removeSkin('${id}')">&times;</span></span>`
+        ).join('');
+    }
+
+    function syncTextarea() {
+        skinIds.value = [...selectedSkins.keys()].join('\n');
     }
 
     btnGetKey.addEventListener('click', async () => {
@@ -168,6 +220,10 @@
         skinIds.value = '';
         camXa.value = '';
         hdMode.checked = false;
+        selectedSkins.clear();
+        renderTags();
+        skinSearch.value = '';
+        searchResults.innerHTML = '';
         showModSection();
     });
 

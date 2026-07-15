@@ -5,6 +5,7 @@ BASE_DIR = Path(__file__).parent.parent
 KIANA_AOV_DIR = BASE_DIR / "KIANA_AOV"
 FILE_MOD_DIR = BASE_DIR / "File_mod"
 V7_PY_PATH = BASE_DIR / "v7.py"
+SKINS_FILE = BASE_DIR / "list_all_skins.txt"
 
 LINK4M_TOKEN = os.environ.get('LINK4M_TOKEN', '')
 
