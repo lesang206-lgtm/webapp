@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod Skin Lien Quan - Auto Mod</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">&#9889;</span>
+                <h1>MOD SKIN</h1>
+            </div>
+            <p class="tagline">Mod skin Lien Quan Mobile mien phi</p>
+        </header>
+
+        <main class="main">
+            <!-- Step 1: Auth -->
+            <section id="auth-section" class="card">
+                <div class="card-header">
+                    <span class="step-badge">1</span>
+                    <h2>Xac thuc</h2>
+                </div>
+                <p class="card-desc">Nhan key mien phi de bat dau su dung</p>
+
+                <button id="btn-get-key" class="btn btn-primary btn-full">
+                    <span class="btn-text">Lay Key Mien Phi</span>
+                    <span class="btn-loading hidden">Dang xu ly...</span>
+                </button>
+
+                <div id="key-info" class="key-info hidden">
+                    <div class="key-link-box">
+                        <p>Bam vao link de lay key:</p>
+                        <a id="key-link" href="#" target="_blank" rel="noopener"></a>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <input type="text" id="input-key" placeholder="Nhap key vao day..." autocomplete="off">
+                    <button id="btn-verify" class="btn btn-secondary">Xac Nhan</button>
+                </div>
+
+                <div id="auth-msg" class="msg hidden"></div>
+            </section>
+
+            <!-- Step 2: Mod -->
+            <section id="mod-section" class="card hidden">
+                <div class="card-header">
+                    <span class="step-badge">2</span>
+                    <h2>Nhap thong tin</h2>
+                </div>
+
+                <div class="form-group">
+                    <label for="skin-ids">Skin ID (moi dong mot ID)</label>
+                    <textarea id="skin-ids" rows="4" placeholder="13213&#10;15015&#10;11215"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="cam-xa">Cam xa (%) - tuy chon</label>
+                    <input type="number" id="cam-xa" min="0" max="300" placeholder="VD: 150">
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" id="hd-mode">
+                    <label for="hd-mode">Mod HD</label>
+                </div>
+
+                <button id="btn-mod" class="btn btn-primary btn-full">
+                    <span class="btn-text">Bat Dau Mod</span>
+                    <span class="btn-loading hidden">Dang xu ly...</span>
+                </button>
+            </section>
+
+            <!-- Progress -->
+            <section id="progress-section" class="card hidden">
+                <div class="card-header">
+                    <span class="step-badge spin">&#8635;</span>
+                    <h2>Dang xu ly</h2>
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <span class="progress-pct" id="progress-pct">0%</span>
+                </div>
+                <p class="progress-text" id="progress-text">Vui long cho...</p>
+            </section>
+
+            <!-- Download -->
+            <section id="download-section" class="card hidden">
+                <div class="card-header">
+                    <span class="step-badge done">&#10003;</span>
+                    <h2>Hoan thanh</h2>
+                </div>
+                <p class="card-desc">File cua ban da san sang</p>
+                <button id="btn-download" class="btn btn-success btn-full">Tai File ZIP</button>
+                <button id="btn-new" class="btn btn-outline btn-full">Mod Them</button>
+            </section>
+
+            <!-- Error -->
+            <div id="error-toast" class="toast hidden"></div>
+        </main>
+
+        <footer class="footer">
+            <p>Mod Skin Tool &copy; 2026</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

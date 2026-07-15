@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: kiana-mod
+    runtime: python
+    buildCommand: pip install -r webapp/requirements.txt
+    startCommand: cd webapp && python setup_resources.py && cd .. && gunicorn webapp.app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 300
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.11"
