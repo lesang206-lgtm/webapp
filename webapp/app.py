@@ -113,10 +113,11 @@ def download(job_id):
     if not job or job['status'] != 'completed':
         return jsonify({'status': 'error', 'message': 'Chua hoan thanh'}), 400
 
-    zip_path = mod_runner.create_download_zip(job_id)
-    if zip_path and zip_path.exists():
+    result = mod_runner.create_download_zip(job_id)
+    if result and result[0].exists():
+        zip_path, display_name = result
         return send_file(zip_path, as_attachment=True,
-                         download_name=f'mod_{job_id[:8]}.zip')
+                         download_name=f'{display_name}.zip')
 
     return jsonify({'status': 'error', 'message': 'Loi tao file'}), 500
 

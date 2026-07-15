@@ -84,7 +84,7 @@ class ModRunner:
             env['PYTHONUNBUFFERED'] = '1'
 
             hd_input = 'y\n' if job['hd_mode'] else 'n\n'
-            folder_name = f"mod_{job['job_id'][:8]}"
+            folder_name = f"mod_{job['job_id']}"
             output_input = f'{folder_name}\n'
             input_data = (hd_input + output_input).encode('utf-8')
 
@@ -112,8 +112,10 @@ class ModRunner:
 
             output_path = core_dir / 'File_mod' / folder_name
             if output_path.exists():
+                self._fix_double_nesting(output_path)
                 job['output_path'] = str(output_path)
                 job['folder_name'] = folder_name
+                job['display_name'] = self._make_display_name(output_path, job)
             else:
                 raise Exception('Output not found')
 
@@ -122,6 +124,51 @@ class ModRunner:
             list_dst = self.v7_path.parent / 'list_mod.txt'
             if list_dst.exists():
                 os.remove(list_dst)
+
+    def _fix_double_nesting(self, output_path):
+        res_dir = output_path / 'Resources'
+        if not res_dir.exists():
+            return
+        nested_res = res_dir / 'Resources'
+        if not nested_res.exists():
+            return
+        print("  Fixing double Resources nesting...")
+        for item in nested_res.iterdir():
+            dest = res_dir / item.name
+            if dest.exists():
+                if dest.is_dir():
+                    shutil.rmtree(dest)
+                else:
+                    dest.unlink()
+            shutil.move(str(item), str(dest))
+        shutil.rmtree(nested_res)
+
+    def _make_display_name(self, output_path, job):
+        skin_names = []
+        skin_list_file = output_path / 'danhsachskin.txt'
+        if skin_list_file.exists():
+            with open(skin_list_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        parts = line.split('. ', 1)
+                        if len(parts) == 2:
+                            skin_names.append(parts[1])
+                        else:
+                            skin_names.append(line)
+
+        cam = job.get('cam_xa_percent')
+        if skin_names:
+            count = len(skin_names)
+            name = f'pack {count} skin'
+            if cam:
+                name += f' + cam xa {cam}%'
+        elif cam:
+            name = f'cam xa {cam}%'
+        else:
+            name = 'mod'
+
+        return name
 
     def get_job_status(self, job_id):
         job_file = self.jobs_dir / job_id / 'job.json'
@@ -139,9 +186,11 @@ class ModRunner:
         if not output_path.exists():
             return None
 
-        zip_path = self.jobs_dir / job_id / f'mod_{job_id[:8]}'
+        display_name = job.get('display_name', 'mod')
+        safe_name = display_name.replace(' ', '_').replace('+', 'n').replace('%', 'pct')
+        zip_path = self.jobs_dir / job_id / safe_name
         shutil.make_archive(str(zip_path), 'zip', output_path.parent, output_path.name)
-        return zip_path.with_suffix('.zip')
+        return zip_path.with_suffix('.zip'), display_name
 
     def cleanup_old_jobs(self, max_age_hours=24):
         now = datetime.now()
