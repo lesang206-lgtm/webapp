@@ -28,8 +28,8 @@ class KeyManager:
     def generate_key(self, ip):
         ngay = int(datetime.now().day)
         key1 = str(ngay * 27 + 27)
-        rand = secrets.token_hex(2).upper()
-        key = f'NDK{key1}{rand}'
+        ip_numbers = ''.join(filter(str.isdigit, ip))
+        key = f'NDK{key1}{ip_numbers}'
         expiration = datetime.now().replace(hour=23, minute=59, second=59, microsecond=0)
         return key, expiration
 
