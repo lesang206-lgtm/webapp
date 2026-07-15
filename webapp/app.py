@@ -1,7 +1,11 @@
 import os
+import sys
 import secrets
 import threading
 from datetime import datetime
+
+sys.path.insert(0, os.path.dirname(__file__))
+
 from flask import Flask, render_template, request, jsonify, session, send_file
 from config import *
 from key_manager import KeyManager
