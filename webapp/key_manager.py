@@ -35,6 +35,7 @@ class KeyManager:
 
     def validate_key(self, ip, key):
         key = key.strip().upper()
+        self._load_db()
         if key in self.db:
             entry = self.db[key]
             exp = datetime.fromisoformat(entry['expiration'])
@@ -56,6 +57,7 @@ class KeyManager:
         self._save_db()
 
     def has_valid_key(self, ip):
+        self._load_db()
         now = datetime.now()
         for key, entry in list(self.db.items()):
             exp = datetime.fromisoformat(entry['expiration'])
