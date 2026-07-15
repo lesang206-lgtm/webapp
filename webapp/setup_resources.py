@@ -4,44 +4,31 @@ import zipfile
 import shutil
 from pathlib import Path
 
-import requests
+import gdown
 
 BASE_DIR = Path(__file__).parent.parent
 MARKER_FILE = BASE_DIR / 'webapp' / '.setup_done'
 KIANA_AOV_DIR = BASE_DIR / 'KIANA_AOV'
 
-GDRIVE_KIANA_ID = os.environ.get('GDRIVE_KIANA_ID', '1FygINESUOVveLscX_2-waUZzMbYkFceV')
+GDRIVE_KIANA_ID = os.environ.get('GDRIVE_KIANA_ID', '1gIDPurG0NJWQOYtz5BjwUfD56Ql3z205')
 GDRIVE_V7_ID = os.environ.get('GDRIVE_V7_ID', '1EV7nWY8pHfhACm8cZDIa5ZWqOKgKuBsL')
 
 
 def download_gdrive_file(file_id, dest_path):
-    url = "https://drive.google.com/uc?export=download"
-    session = requests.Session()
-
     print(f"  Downloading {file_id}...")
-    response = session.get(url, params={'id': file_id}, stream=True)
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, str(dest_path), quiet=False, fuzzy=True)
 
-    token = None
-    for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            token = value
-            break
+    if not dest_path.exists() or dest_path.stat().st_size == 0:
+        raise Exception(f"Download failed for {file_id}")
 
-    if token:
-        response = session.get(url, params={'id': file_id, 'confirm': token}, stream=True)
-
-    total = 0
-    with open(dest_path, 'wb') as f:
-        for chunk in response.iter_content(32768):
-            if chunk:
-                f.write(chunk)
-                total += len(chunk)
-
-    print(f"  Downloaded: {dest_path.name} ({total / 1024 / 1024:.1f} MB)")
+    print(f"  Downloaded: {dest_path.name} ({dest_path.stat().st_size / 1024 / 1024:.1f} MB)")
 
 
 def extract_zip(zip_path, extract_to):
     print(f"  Extracting {zip_path.name}...")
+    if not zipfile.is_zipfile(zip_path):
+        raise Exception(f"Not a valid zip file: {zip_path.name}")
     with zipfile.ZipFile(zip_path, 'r') as zf:
         zf.extractall(extract_to)
 
