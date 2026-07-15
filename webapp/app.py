@@ -33,51 +33,25 @@ def request_key():
     key, exp = key_mgr.generate_key(ip)
     key_mgr.save_key(ip, key, exp)
 
-    base_url = f'https://kianamodaov1.blogspot.com/2026/06/webkey.html?ma={key}'
-    shortened = key_mgr.shorten_url(base_url, LINK4M_TOKEN)
+    session['verified'] = True
+    session['ip'] = ip
+    session['verified_at'] = datetime.now().isoformat()
 
-    return jsonify({'status': 'ok', 'link': shortened or base_url})
-
-
-@app.route('/api/verify', methods=['POST'])
-def verify():
-    data = request.get_json(silent=True) or {}
-    key = data.get('key', '').strip()
-    ip = _get_client_ip()
-
-    if not key:
-        return jsonify({'status': 'error', 'message': 'Vui long nhap key!'}), 400
-
-    if key_mgr.validate_key(ip, key):
-        session['verified'] = True
-        session['ip'] = ip
-        session['verified_at'] = datetime.now().isoformat()
-        return jsonify({'status': 'ok', 'message': 'Key hop le!'})
-
-    return jsonify({'status': 'error', 'message': 'Key khong hop le!'}), 400
+    return jsonify({'status': 'ok', 'key': key})
 
 
 @app.route('/api/check-session')
 def check_session():
-    ip = _get_client_ip()
     today = datetime.now().strftime('%Y-%m-%d')
-
     if session.get('verified') and session.get('verified_at', '').startswith(today):
         return jsonify({'status': 'ok', 'verified': True})
-
-    if key_mgr.has_valid_key(ip):
-        session['verified'] = True
-        session['ip'] = ip
-        session['verified_at'] = datetime.now().isoformat()
-        return jsonify({'status': 'ok', 'verified': True})
-
     return jsonify({'status': 'ok', 'verified': False})
 
 
 @app.route('/api/mod', methods=['POST'])
 def create_mod():
     if not session.get('verified'):
-        return jsonify({'status': 'error', 'message': 'Vui long xac thuc key truoc!'}), 403
+        return jsonify({'status': 'error', 'message': 'Vui long lay key truoc!'}), 403
 
     data = request.get_json(silent=True) or {}
     skin_ids = data.get('skin_ids', [])

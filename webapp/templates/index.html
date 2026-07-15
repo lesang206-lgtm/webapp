@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mod Skin Lien Quan - Auto Mod</title>
+    <title>Mod Skin Lien Quan</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
 </head>
 <body>
     <div class="app">
@@ -18,31 +17,17 @@
         </header>
 
         <main class="main">
-            <!-- Step 1: Auth -->
+            <!-- Step 1: Get Key -->
             <section id="auth-section" class="card">
                 <div class="card-header">
                     <span class="step-badge">1</span>
-                    <h2>Xac thuc</h2>
+                    <h2>Bat dau</h2>
                 </div>
-                <p class="card-desc">Nhan key mien phi de bat dau su dung</p>
-
+                <p class="card-desc">Bam de nhan key mien phi (het han trong ngay)</p>
                 <button id="btn-get-key" class="btn btn-primary btn-full">
                     <span class="btn-text">Lay Key Mien Phi</span>
                     <span class="btn-loading hidden">Dang xu ly...</span>
                 </button>
-
-                <div id="key-info" class="key-info hidden">
-                    <div class="key-link-box">
-                        <p>Bam vao link de lay key:</p>
-                        <a id="key-link" href="#" target="_blank" rel="noopener"></a>
-                    </div>
-                </div>
-
-                <div class="input-row">
-                    <input type="text" id="input-key" placeholder="Nhap key vao day..." autocomplete="off">
-                    <button id="btn-verify" class="btn btn-secondary">Xac Nhan</button>
-                </div>
-
                 <div id="auth-msg" class="msg hidden"></div>
             </section>
 
@@ -100,7 +85,6 @@
                 <button id="btn-new" class="btn btn-outline btn-full">Mod Them</button>
             </section>
 
-            <!-- Error -->
             <div id="error-toast" class="toast hidden"></div>
         </main>
 
