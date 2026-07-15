@@ -18,5 +18,5 @@ JOBS_DIR.mkdir(exist_ok=True)
 
 KEYS_DB = BASE_DIR / "webapp" / "keys.json"
 
-GDRIVE_KIANA_ID = os.environ.get('GDRIVE_KIANA_ID', '1FygINESUOVveLscX_2-waUZzMbYkFceV')
+GDRIVE_KIANA_ID = os.environ.get('GDRIVE_KIANA_ID', '1gIDPurG0NJWQOYtz5BjwUfD56Ql3z205')
 GDRIVE_V7_ID = os.environ.get('GDRIVE_V7_ID', '1EV7nWY8pHfhACm8cZDIa5ZWqOKgKuBsL')

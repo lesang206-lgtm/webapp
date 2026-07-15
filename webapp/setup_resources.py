@@ -17,7 +17,7 @@ GDRIVE_V7_ID = os.environ.get('GDRIVE_V7_ID', '1EV7nWY8pHfhACm8cZDIa5ZWqOKgKuBsL
 def download_gdrive_file(file_id, dest_path):
     print(f"  Downloading {file_id}...")
     url = f"https://drive.google.com/uc?id={file_id}"
-    gdown.download(url, str(dest_path), quiet=False, fuzzy=True)
+    gdown.download(url, str(dest_path), quiet=False)
 
     if not dest_path.exists() or dest_path.stat().st_size == 0:
         raise Exception(f"Download failed for {file_id}")
