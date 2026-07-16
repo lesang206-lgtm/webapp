@@ -33,6 +33,34 @@
     let searchTimer = null;
     const selectedSkins = new Map();
 
+    // Theme toggle
+    const savedTheme = localStorage.getItem('kiana_theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light');
+        $('theme-toggle').innerHTML = '&#9788;';
+    }
+
+    window._toggleTheme = function() {
+        document.body.classList.toggle('light');
+        const isLight = document.body.classList.contains('light');
+        $('theme-toggle').innerHTML = isLight ? '&#9788;' : '&#9790;';
+        localStorage.setItem('kiana_theme', isLight ? 'light' : 'dark');
+    };
+
+    // Subscribe popup
+    if (!localStorage.getItem('kiana_subscribed')) {
+        $('sub-popup').classList.remove('hidden');
+    } else {
+        $('sub-popup').classList.add('hidden');
+    }
+
+    window._subDone = function() {
+        localStorage.setItem('kiana_subscribed', '1');
+        const popup = $('sub-popup');
+        popup.classList.add('hide');
+        setTimeout(() => popup.classList.add('hidden'), 300);
+    };
+
     checkSession();
 
     async function checkSession() {

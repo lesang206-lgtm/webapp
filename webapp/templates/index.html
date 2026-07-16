@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div id="sub-popup" class="sub-popup hidden">
+        <div class="sub-popup-box">
+            <h2>Chao mung ban den voi KIANA MOD</h2>
+            <p>Dang ky kenh YTB de su dung tool mien phi</p>
+            <a id="sub-link" href="https://www.youtube.com/channel/UCCKywGTsMdlfBbwnQreTz-A" target="_blank" rel="noopener" class="btn btn-primary btn-full" onclick="window._subDone()">Dang Ky Kenh</a>
+            <button class="btn btn-outline btn-full" onclick="window._subDone()" style="margin-top:8px">Da Dang Ky</button>
+        </div>
+    </div>
+
+    <button id="theme-toggle" class="theme-toggle" onclick="window._toggleTheme()">&#9790;</button>
+
     <div class="app">
         <header class="header">
             <div class="logo">
