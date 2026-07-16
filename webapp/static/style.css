@@ -197,13 +197,15 @@ body {
 }
 
 .btn-secondary {
-    background: var(--secondary);
-    color: var(--text);
-    border: 1px solid var(--card-border);
+    background: linear-gradient(135deg, #7c4dff, #ff4081);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 16px rgba(124, 77, 255, 0.3);
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background: #3d3d3d;
+    background: linear-gradient(135deg, #651fff, #f50057);
+    box-shadow: 0 6px 20px rgba(124, 77, 255, 0.4);
 }
 
 .btn-success {

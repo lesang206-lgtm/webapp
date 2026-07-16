@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mod Skin Lien Quan</title>
+    <title>Mod Skin Liên Quân</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div id="sub-popup" class="sub-popup hidden">
         <div class="sub-popup-box">
-            <h2>Chao mung ban den voi KIANA MOD</h2>
-            <p>Dang ky kenh YTB de su dung tool mien phi</p>
-            <a id="sub-link" href="https://www.youtube.com/channel/UCCKywGTsMdlfBbwnQreTz-A" target="_blank" rel="noopener" class="btn btn-primary btn-full" onclick="window._subDone()">Dang Ky Kenh</a>
-            <button class="btn btn-outline btn-full" onclick="window._subDone()" style="margin-top:8px">Da Dang Ky</button>
+            <h2>Chào mừng bạn đến với KIANA MOD AOV</h2>
+            <p>Đăng ký kênh Youtube</p>
+            <a id="sub-link" href="https://www.youtube.com/channel/UCCKywGTsMdlfBbwnQreTz-A" target="_blank" rel="noopener" class="btn btn-primary btn-full" onclick="window._subDone()">Đăng Ký Kênh</a>
         </div>
     </div>
 
@@ -24,7 +23,7 @@
                 <img src="{{ url_for('static', filename='logo.jpg') }}" alt="logo" class="logo-img">
                 <h1>KIANA MOD</h1>
             </div>
-            <p class="tagline">Mod skin Lien Quan Mobile mien phi</p>
+            <p class="tagline">Mod skin & Cam xa</p>
         </header>
 
         <main class="main">
@@ -34,10 +33,10 @@
                     <span class="step-badge">1</span>
                     <h2>Lấy Key</h2>
                 </div>
-                <p class="card-desc">Nhấn 1 để lấy key miễn phí</p>
+                <p class="card-desc">Nhấn vào nút lấy key để lấy pass</p>
 
                 <button id="btn-get-key" class="btn btn-primary btn-full">
-                    <span class="btn-text">Nhấn 1 để lấy key (Free)</span>
+                    <span class="btn-text">Lấy Key (Free)</span>
                     <span class="btn-loading hidden">Đang xử lý...</span>
                 </button>
 
@@ -61,17 +60,17 @@
             <section id="mod-section" class="card hidden">
                 <div class="card-header">
                     <span class="step-badge">2</span>
-                    <h2>Nhap thong tin</h2>
+                    <h2>Nhập thông tin</h2>
                 </div>
 
                 <div class="form-group">
-                    <label>Tim skin theo ten</label>
-                    <input type="text" id="skin-search" placeholder="Nhap ten hero hoac skin (VD: nak, killua...)" autocomplete="off">
+                    <label>ìm skin theo tên</label>
+                    <input type="text" id="skin-search" placeholder="Nhập tên hero hoặc skin (VD: nak, killua...)" autocomplete="off">
                     <div id="search-results" class="search-results"></div>
                 </div>
 
                 <div class="form-group">
-                    <label>Da chon</label>
+                    <label>Đã chọn</label>
                     <div id="selected-tags" class="tag-list"></div>
                 </div>
 
