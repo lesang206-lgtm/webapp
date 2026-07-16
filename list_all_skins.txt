@@ -158,7 +158,6 @@
 11616: Nữ thần Khởi nguyên
 11618: Tình yêu nổi loạn
 11619: Rockgirl Siêu Đẳng
-11620: Bình Minh Tận Thế
 11621: Ninh Tần
 
 117: Ormarr
@@ -359,7 +358,6 @@
 13308: Cá mập "nghiêm túc"
 13309: Hoàng tử Băng
 13310: Thần tài
-13311: Xạ thần Kagutsuchi
 13312: S - Quang vinh
 13313: Đệ nhất thần thám
 13314: Thứ nguyên vệ thần
@@ -406,6 +404,7 @@
 13704: Ô Thước đại hiệp
 13705: Tử xà bá tước
 13706: Megumi Fushiguro
+13707: Cửu sơn tương liễu
 
 138: [ex][DNT]
 
@@ -507,7 +506,6 @@
 15001: Chiến binh hỏa ngục
 15002: Quân đoàn địa ngục
 15003: Bboy công nghệ
-15004: Siêu việt
 15005: Khiêu chiến
 15006: Quán quân
 15007: Lôi quang sứ
@@ -517,6 +515,7 @@
 15013: Quỷ thương Liệp đế
 15014: Producer Tia chớp
 15015: Bạch Diện chiến thương
+15016: Levi
 
 151: [ex][DNT]
 
@@ -645,7 +644,6 @@
 16704: Ngộ khá trẩu
 16705: Siêu việt 2.0
 16706: Đặc vụ băng hầu
-16707: Nhóc tì bá đạo
 16708: Tề Thiên ma hầu
 16709: Cổ thần Ai Cập
 16710: Tân niên Võ thần
@@ -1348,7 +1346,7 @@
 54504: Vũ phiến hỏa diệm
 54505: Nữ hoàng Băng giá
 54506: Nàng tiên Gạo
-54507: Vương Miện Sa Ngã
+54507: Hỗn độn thần ma
 
 546: Teeri
 54601: Tiểu kỳ lân
@@ -1422,7 +1420,7 @@
 595: Edras
 
 596: Goverra
-59601: 59601
+59601: Kỳ nghỉ hoàn mỹ
 
 597: Biron
 59701: Võ sĩ Giác đấu
