@@ -47,15 +47,18 @@
         localStorage.setItem('kiana_theme', isLight ? 'light' : 'dark');
     };
 
-    // Subscribe popup
-    if (!localStorage.getItem('kiana_subscribed')) {
+    // Subscribe popup - hien moi ngay 1 lan
+    const today = new Date().toISOString().slice(0, 10);
+    const subDate = localStorage.getItem('kiana_sub_date');
+    if (subDate !== today) {
         $('sub-popup').classList.remove('hidden');
     } else {
         $('sub-popup').classList.add('hidden');
     }
 
     window._subDone = function() {
-        localStorage.setItem('kiana_subscribed', '1');
+        const today = new Date().toISOString().slice(0, 10);
+        localStorage.setItem('kiana_sub_date', today);
         const popup = $('sub-popup');
         popup.classList.add('hide');
         setTimeout(() => popup.classList.add('hidden'), 300);
