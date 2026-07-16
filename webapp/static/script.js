@@ -54,23 +54,33 @@
         try {
             const res = await fetch('/api/search?q=' + encodeURIComponent(q));
             const items = await res.json();
-            searchResults.innerHTML = items.map(it => `
-                <div class="search-item">
+            searchResults.innerHTML = items.map(it => {
+                const heroPrefix = it.skin_id.substring(0, 3);
+                const existing = [...selectedSkins.entries()].find(([sid]) => sid.substring(0, 3) === heroPrefix);
+                const alreadySelected = existing ? existing[1] : null;
+                return `
+                <div class="search-item${alreadySelected ? ' has-skin' : ''}">
                     <div>
                         <div class="search-skin">${it.skin_name}</div>
-                        <div class="search-hero">${it.hero} (${it.skin_id})</div>
+                        <div class="search-hero">${it.hero} (${it.skin_id})${alreadySelected ? ' - da chon: ' + alreadySelected.split(' - ')[1] : ''}</div>
                     </div>
-                    <button class="btn-add" onclick="window._addSkin('${it.skin_id}','${it.hero} - ${it.skin_name}')">+</button>
-                </div>
-            `).join('');
+                    <button class="btn-add" onclick="window._addSkin('${it.skin_id}','${it.hero} - ${it.skin_name}','${heroPrefix}')">${alreadySelected ? 'doi' : '+'}</button>
+                </div>`;
+            }).join('');
         } catch {}
     }
 
-    window._addSkin = function(id, name) {
-        if (selectedSkins.has(id)) return;
+    window._addSkin = function(id, name, heroPrefix) {
+        for (const [sid] of selectedSkins) {
+            if (sid.substring(0, 3) === heroPrefix) {
+                selectedSkins.delete(sid);
+                break;
+            }
+        }
         selectedSkins.set(id, name);
         renderTags();
         syncTextarea();
+        doSearch();
     };
 
     window._removeSkin = function(id) {

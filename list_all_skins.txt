@@ -684,6 +684,7 @@
 17104: Tiệc bãi biển
 17106: Bách tướng Lão tam
 17107: Caesar bão tố
+17108: Eren
 
 173: Fennik
 17301: Nhà thám hiểm
