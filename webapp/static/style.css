@@ -423,10 +423,27 @@ textarea {
 /* Footer */
 .footer {
     text-align: center;
-    padding: 24px 0;
+    padding: 24px 0 12px;
     color: var(--text-dim);
     font-size: 0.8em;
     margin-top: auto;
+}
+
+/* Ad Box */
+.ad-box {
+    margin: 0 auto 16px;
+    max-width: 480px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+}
+
+.ad-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
 }
 
 /* Utilities */
