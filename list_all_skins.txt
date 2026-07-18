@@ -159,6 +159,7 @@
 11618: Tình yêu nổi loạn
 11619: Rockgirl Siêu Đẳng
 11621: Ninh Tần
+11622: Thỏ may mắn
 
 117: Ormarr
 11701: Cựu chiến binh
@@ -232,6 +233,7 @@
 12309: Quỷ nhãn ma thể
 12310: Đao phủ Dạ Ưng
 12311: Đại Thiên Tu La
+12312: Đấu sĩ đoạt thẻ
 
 124: Ignis
 12401: Hỏa thuật sư
@@ -453,6 +455,7 @@
 14212: Băng lam nữ soái
 14213: Nguyệt Ảnh Kiếm Tiên
 14214: Kuromi's Heart
+14215: Phù thủy bóng Đêm
 
 143: [ex][DNT]
 
@@ -589,6 +592,7 @@
 15710: Bão vũ Cuồng lôi
 15711: Gon
 15712: Lễ hội té nước
+15714: Đại chiến bùng nổ
 
 158: [ex][DNT]
 
@@ -1159,6 +1163,7 @@
 52609: Quận chúa sông Nile
 52610: Capoo Boom
 52611: Quái kỳ hí pháp
+52612: Thuật sư săn thẻ
 
 527: Sephera
 52701: Quý tiểu thư
@@ -1291,6 +1296,7 @@
 53804: Yêu nhân học viện
 53805: Tiếng thét Hỗn mang
 53806: Rimuru Tempest
+53807: Đại chiến bùng nổ
 
 539: Lorion
 53901: Chiến giáp hắc ám
