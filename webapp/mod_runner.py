@@ -3,8 +3,12 @@ import sys
 import json
 import shutil
 import subprocess
+import threading
+import tempfile
 from pathlib import Path
 from datetime import datetime
+
+_worker_semaphore = threading.Semaphore(3)
 
 
 class ModRunner:
@@ -67,17 +71,24 @@ class ModRunner:
             json.dump(job, f, indent=2)
 
     def _run_core(self, job_dir, job):
-        original_cwd = os.getcwd()
+        core_dir = self.v7_path.parent
+        res_dir = core_dir / 'KIANA_AOV' / 'Resources'
+        if not res_dir.exists():
+            raise Exception('Resources not found')
+
+        workspace = Path(tempfile.mkdtemp(prefix='mod_'))
         try:
-            core_dir = self.v7_path.parent
+            (workspace / 'v7.py').write_bytes(self.v7_path.read_bytes())
+            (workspace / 'list_mod.txt').write_bytes((job_dir / 'list_mod.txt').read_bytes())
 
-            res_dir = core_dir / 'KIANA_AOV' / 'Resources'
-            if not res_dir.exists():
-                raise Exception('Resources not found')
+            kiana_link = workspace / 'KIANA_AOV'
+            if sys.platform == 'win32':
+                import subprocess as sp
+                sp.run(['cmd', '/c', 'mklink', '/J', str(kiana_link), str(core_dir / 'KIANA_AOV')], capture_output=True)
+            else:
+                os.symlink(str(core_dir / 'KIANA_AOV'), str(kiana_link), target_is_directory=True)
 
-            list_src = job_dir / 'list_mod.txt'
-            list_dst = core_dir / 'list_mod.txt'
-            shutil.copy2(list_src, list_dst)
+            (workspace / 'File_mod').mkdir(exist_ok=True)
 
             env = os.environ.copy()
             env['PYTHONIOENCODING'] = 'utf-8'
@@ -88,13 +99,13 @@ class ModRunner:
             output_input = f'{folder_name}\n'
             input_data = (hd_input + output_input).encode('utf-8')
 
-            cmd = [sys.executable, '-u', str(self.v7_path)]
+            cmd = [sys.executable, '-u', str(workspace / 'v7.py')]
             kwargs = {
                 'stdin': subprocess.PIPE,
                 'stdout': subprocess.PIPE,
                 'stderr': subprocess.PIPE,
                 'env': env,
-                'cwd': str(core_dir),
+                'cwd': str(workspace),
             }
 
             if sys.platform == 'win32':
@@ -103,27 +114,29 @@ class ModRunner:
                 startupinfo.wShowWindow = subprocess.SW_HIDE
                 kwargs['startupinfo'] = startupinfo
 
-            process = subprocess.Popen(cmd, **kwargs)
-            stdout, stderr = process.communicate(input=input_data, timeout=600)
+            with _worker_semaphore:
+                process = subprocess.Popen(cmd, **kwargs)
+                stdout, stderr = process.communicate(input=input_data, timeout=600)
 
             if process.returncode != 0:
                 stderr_text = stderr.decode('utf-8', errors='replace')
                 raise Exception(f'Process failed: {stderr_text[:200]}')
 
-            output_path = core_dir / 'File_mod' / folder_name
-            if output_path.exists():
-                self._fix_double_nesting(output_path)
-                job['output_path'] = str(output_path)
-                job['folder_name'] = folder_name
-                job['display_name'] = self._make_display_name(output_path, job)
-            else:
+            output_path = workspace / 'File_mod' / folder_name
+            if not output_path.exists():
                 raise Exception('Output not found')
 
+            final_output = core_dir / 'File_mod' / folder_name
+            final_output.parent.mkdir(exist_ok=True)
+            shutil.move(str(output_path), str(final_output))
+
+            self._fix_double_nesting(final_output)
+            job['output_path'] = str(final_output)
+            job['folder_name'] = folder_name
+            job['display_name'] = self._make_display_name(final_output, job)
+
         finally:
-            os.chdir(original_cwd)
-            list_dst = self.v7_path.parent / 'list_mod.txt'
-            if list_dst.exists():
-                os.remove(list_dst)
+            shutil.rmtree(workspace, ignore_errors=True)
 
     def _fix_double_nesting(self, output_path):
         res_dir = output_path / 'Resources'
@@ -190,6 +203,9 @@ class ModRunner:
         safe_name = display_name.replace(' ', '_').replace('+', 'n').replace('%', 'pct')
         zip_path = self.jobs_dir / job_id / safe_name
         shutil.make_archive(str(zip_path), 'zip', output_path.parent, output_path.name)
+
+        shutil.rmtree(output_path)
+
         return zip_path.with_suffix('.zip'), display_name
 
     def cleanup_old_jobs(self, max_age_hours=24):
@@ -205,4 +221,7 @@ class ModRunner:
             created = datetime.fromisoformat(job['created_at'])
             age = (now - created).total_seconds() / 3600
             if age > max_age_hours:
+                output = Path(job.get('output_path', ''))
+                if output.exists():
+                    shutil.rmtree(output)
                 shutil.rmtree(job_dir)
