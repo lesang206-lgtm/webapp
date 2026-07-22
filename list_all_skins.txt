@@ -640,6 +640,7 @@
 16610: Hoàng tử Okka
 16611: Băng lam kiếm vệ
 16612: Pompompurin's Oath
+16613: Thần tướng tróc quỷ
 
 167: Ngộ Không
 16701: Đạo tặc
@@ -1329,6 +1330,7 @@
 54205: Thần phong Hộ vệ
 54206: Hỗn mang đao
 54208: Thần thoại Hy Lạp
+54209: Cần thủ Cyborg
 
 543: Aya
 54301: Hoạt náo viên
