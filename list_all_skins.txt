@@ -218,6 +218,7 @@
 12105: Chủ hôn
 12106: Phù Quang Mạc Ảnh
 12107: Hi Phi
+12108: Huyết quỷ tà thần
 
 122: [ex][DNT]
 
@@ -349,6 +350,7 @@
 13212: Thống soái Dạ Ưng
 13213: Siêu đạo chích Kid
 13214: Đầu bếp Yakitori
+13215: Thứ Nguyên Vệ Thần
 
 133: Valhein
 13301: Hoàng tử quạ
@@ -470,6 +472,7 @@
 14410: Hoa hồng đỏ tươi
 14411: Thần chiến tranh
 14412: Shion
+14413: Huyết quỷ tà thần
 
 145: [ex][DNT]
 
@@ -1104,6 +1107,7 @@
 52111: Hỏa diệm Thần long
 52112: S - Quang vinh
 52113: Kỷ Nguyên Hổ Phách
+52114: Quám Quân
 
 522: Errol
 52201: Vượt ngục
