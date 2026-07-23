@@ -430,6 +430,31 @@ textarea {
 }
 
 /* Ad Box */
+.announce-box {
+    margin: 0 auto 8px;
+    max-width: 480px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(124, 77, 255, 0.12), rgba(255, 64, 129, 0.08));
+    border: 1px solid rgba(124, 77, 255, 0.2);
+    font-size: 0.82em;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: announcePulse 3s ease-in-out infinite;
+}
+
+@keyframes announcePulse {
+    0%, 100% { border-color: rgba(124, 77, 255, 0.2); }
+    50% { border-color: rgba(124, 77, 255, 0.5); }
+}
+
+.announce-icon {
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
 .ad-box {
     margin: 0 auto 16px;
     max-width: 480px;
@@ -443,7 +468,6 @@ textarea {
     width: 100%;
     height: auto;
     display: block;
-    object-fit: cover;
 }
 
 /* Utilities */
