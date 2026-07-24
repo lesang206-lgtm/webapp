@@ -49,6 +49,7 @@
 10807: Phù thủy Ba Tư
 10809: Xích Long
 10811: PASULOL
+10812: Enyoji ji
 
 109: Veera
 10901: Cô giáo hắc ám
@@ -66,6 +67,7 @@
 10914: Phù thủy Hội họa
 10915: Thất Sát - Thượng Sinh
 10916: My Melody's Love
+10917: Momo Ayase
 
 110: Kahlii
 11001: Cô dâu hắc ám
@@ -1446,3 +1448,4 @@
 599: Billow
 59901: Thiên Tướng - Độ Ách
 59902: T-Rex Bất Bại
+59903: Okarun
