@@ -169,14 +169,12 @@ def download(job_id):
 
 @app.route('/api/button-mods')
 def list_button_mods():
-    if not BUTTON_MOD_DIR.exists():
+    links_file = BTN_SKIN_DIR / 'links.json'
+    if not links_file.exists():
         return jsonify([])
 
-    links_file = BTN_SKIN_DIR / 'links.json'
-    links = {}
-    if links_file.exists():
-        with open(links_file, 'r', encoding='utf-8') as f:
-            links = json.load(f)
+    with open(links_file, 'r', encoding='utf-8') as f:
+        links = json.load(f)
 
     img_exts = {'.jpg', '.jpeg', '.png', '.webp'}
     images = {}
@@ -186,39 +184,10 @@ def list_button_mods():
                 images[f.name] = f.name
 
     mods = []
-    seen = set()
-
-    def find_link(stem):
-        s = stem.lower()
-        for key, val in links.items():
-            if not isinstance(val, dict):
-                continue
-            k = key.lower()
-            if s == k or s.startswith(k) or k.startswith(s):
-                return val
-        return None
-
-    for f in sorted(BUTTON_MOD_DIR.glob('*.zip')):
-        info = find_link(f.stem)
-        if not info:
-            continue
-        seen.add(info.get('image', ''))
-        img_file = info.get('image', '')
-        download_url = info.get('url', '')
-        img = images.get(img_file)
-        mods.append({
-            'name': f.stem,
-            'filename': f.name,
-            'image': f'/btn-skin/{img}' if img else None,
-            'download_url': download_url,
-        })
-
     for key, val in links.items():
         if not isinstance(val, dict):
             continue
         img_file = val.get('image', '')
-        if img_file in seen:
-            continue
         download_url = val.get('url', '')
         img = images.get(img_file)
         mods.append({
