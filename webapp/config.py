@@ -21,3 +21,7 @@ KEYS_DB = BASE_DIR / "webapp" / "keys.json"
 
 GDRIVE_KIANA_ID = os.environ.get('GDRIVE_KIANA_ID', '1gIDPurG0NJWQOYtz5BjwUfD56Ql3z205')
 GDRIVE_V7_ID = os.environ.get('GDRIVE_V7_ID', '1EV7nWY8pHfhACm8cZDIa5ZWqOKgKuBsL')
+
+BUTTON_MOD_DIR = BASE_DIR / "File_Mod" / "mod" / "nut bấm"
+BTN_SKIN_DIR = BASE_DIR / "webapp" / "static" / "btn_skin"
+BTN_SKIN_DIR.mkdir(exist_ok=True)

@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import json
 import secrets
 import threading
 from datetime import datetime
@@ -164,6 +165,86 @@ def download(job_id):
                          download_name=f'{display_name}.zip')
 
     return jsonify({'status': 'error', 'message': 'Loi tao file'}), 500
+
+
+@app.route('/api/button-mods')
+def list_button_mods():
+    if not BUTTON_MOD_DIR.exists():
+        return jsonify([])
+
+    links_file = BTN_SKIN_DIR / 'links.json'
+    links = {}
+    if links_file.exists():
+        with open(links_file, 'r', encoding='utf-8') as f:
+            links = json.load(f)
+
+    img_exts = {'.jpg', '.jpeg', '.png', '.webp'}
+    images = {}
+    if BTN_SKIN_DIR.exists():
+        for f in BTN_SKIN_DIR.iterdir():
+            if f.suffix.lower() in img_exts:
+                images[f.name] = f.name
+
+    mods = []
+    seen = set()
+
+    def find_link(stem):
+        s = stem.lower()
+        for key, val in links.items():
+            if not isinstance(val, dict):
+                continue
+            k = key.lower()
+            if s == k or s.startswith(k) or k.startswith(s):
+                return val
+        return None
+
+    for f in sorted(BUTTON_MOD_DIR.glob('*.zip')):
+        info = find_link(f.stem)
+        if not info:
+            continue
+        seen.add(info.get('image', ''))
+        img_file = info.get('image', '')
+        download_url = info.get('url', '')
+        img = images.get(img_file)
+        mods.append({
+            'name': f.stem,
+            'filename': f.name,
+            'image': f'/btn-skin/{img}' if img else None,
+            'download_url': download_url,
+        })
+
+    for key, val in links.items():
+        if not isinstance(val, dict):
+            continue
+        img_file = val.get('image', '')
+        if img_file in seen:
+            continue
+        download_url = val.get('url', '')
+        img = images.get(img_file)
+        mods.append({
+            'name': key,
+            'filename': '',
+            'image': f'/btn-skin/{img}' if img else None,
+            'download_url': download_url,
+        })
+
+    return jsonify(mods)
+
+
+@app.route('/btn-skin/<path:filename>')
+def serve_btn_skin(filename):
+    file_path = BTN_SKIN_DIR / filename
+    if not file_path.exists():
+        return '', 404
+    return send_file(file_path)
+
+
+@app.route('/download-button/<path:filename>')
+def download_button(filename):
+    file_path = BUTTON_MOD_DIR / filename
+    if not file_path.exists() or not file_path.suffix == '.zip':
+        return jsonify({'status': 'error', 'message': 'File not found'}), 404
+    return send_file(file_path, as_attachment=True, download_name=filename)
 
 
 def _get_client_ip():

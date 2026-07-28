@@ -74,6 +74,36 @@
         } catch {}
     }
 
+    // Menu
+    window._toggleMenu = function() {
+        $('side-menu').classList.toggle('open');
+    };
+
+    window._showSection = function(section) {
+        $('side-menu').classList.remove('open');
+        $('auth-section').classList.add('hidden');
+        $('mod-section').classList.add('hidden');
+        $('progress-section').classList.add('hidden');
+        $('download-section').classList.add('hidden');
+        $('tutorial-section').classList.add('hidden');
+        $('mods-section').classList.add('hidden');
+        $('buttons-section').classList.add('hidden');
+
+        if (section === 'home') {
+            fetch('/api/check-session').then(r => r.json()).then(data => {
+                if (data.verified) showModSection();
+                else $('auth-section').classList.remove('hidden');
+            }).catch(() => $('auth-section').classList.remove('hidden'));
+        } else if (section === 'tutorial') {
+            $('tutorial-section').classList.remove('hidden');
+        } else if (section === 'mods') {
+            $('mods-section').classList.remove('hidden');
+        } else if (section === 'buttons') {
+            $('buttons-section').classList.remove('hidden');
+            loadButtonMods();
+        }
+    };
+
     skinSearch.addEventListener('input', () => {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(doSearch, 300);
@@ -321,4 +351,97 @@
         errorToast.classList.remove('hidden');
         setTimeout(() => errorToast.classList.add('hidden'), 4000);
     }
+
+    const btnColors = [
+        'linear-gradient(135deg, #667eea, #764ba2)',
+        'linear-gradient(135deg, #f093fb, #f5576c)',
+        'linear-gradient(135deg, #4facfe, #00f2fe)',
+        'linear-gradient(135deg, #43e97b, #38f9d7)',
+        'linear-gradient(135deg, #fa709a, #fee140)',
+        'linear-gradient(135deg, #a18cd1, #fbc2eb)',
+        'linear-gradient(135deg, #fccb90, #d57eeb)',
+        'linear-gradient(135deg, #e0c3fc, #8ec5fc)',
+        'linear-gradient(135deg, #f5576c, #ff6a88)',
+    ];
+
+    function getBtnColor(name) {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        return btnColors[Math.abs(hash) % btnColors.length];
+    }
+
+    function extractHero(name) {
+        return name.replace(/\s*(By Kiana Mod)?$/i, '').trim();
+    }
+
+    const btnModsData = [];
+
+    async function loadButtonMods() {
+        const grid = $('btn-mods-grid');
+        try {
+            const res = await fetch('/api/button-mods');
+            const mods = await res.json();
+            btnModsData.length = 0;
+            mods.forEach(m => btnModsData.push(m));
+            grid.innerHTML = mods.map((m, i) => {
+                const hero = extractHero(m.name);
+                const bg = getBtnColor(m.name);
+                const avatarContent = m.image
+                    ? `<img src="${m.image}" alt="${hero}" class="btn-mod-img">`
+                    : `<span>${hero.charAt(0)}</span>`;
+                return `
+                <div class="btn-mod-item" data-idx="${i}">
+                    <div class="btn-mod-avatar" style="${m.image ? '' : 'background:' + bg}">${avatarContent}</div>
+                    <div class="btn-mod-name">${hero}</div>
+                </div>`;
+            }).join('');
+
+            grid.querySelectorAll('.btn-mod-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const m = btnModsData[el.dataset.idx];
+                    const hero = extractHero(m.name);
+                    const bg = getBtnColor(m.name);
+                    openBtnModal(hero, m.image, m.download_url, bg);
+                });
+            });
+
+            if (!mods.length) grid.innerHTML = '<p style="color:var(--text-dim);grid-column:1/-1;text-align:center">Chua co mod nut ban</p>';
+        } catch {
+            grid.innerHTML = '<p style="color:var(--text-dim);grid-column:1/-1;text-align:center">Loi tai danh sach</p>';
+        }
+    }
+
+    function openBtnModal(name, image, url, bg) {
+        const modal = $('btn-modal');
+        const imgEl = $('btn-modal-img');
+        const fallbackEl = $('btn-modal-fallback');
+        const nameEl = $('btn-modal-name');
+        const linkEl = $('btn-modal-link');
+
+        nameEl.textContent = name;
+
+        if (image) {
+            imgEl.src = image;
+            imgEl.classList.remove('hidden');
+            fallbackEl.className = 'btn-modal-fallback';
+        } else {
+            imgEl.classList.add('hidden');
+            fallbackEl.style.background = bg;
+            fallbackEl.textContent = name.charAt(0);
+            fallbackEl.className = 'btn-modal-fallback show';
+        }
+
+        if (url) {
+            linkEl.href = url;
+            linkEl.style.display = 'block';
+        } else {
+            linkEl.style.display = 'none';
+        }
+
+        modal.classList.remove('hidden');
+    }
+
+    window._closeBtnModal = function() {
+        $('btn-modal').classList.add('hidden');
+    };
 })();

@@ -9,9 +9,22 @@
 <body>
     <div id="sub-popup" class="sub-popup hidden">
         <div class="sub-popup-box">
-            <h2>Chào mừng bạn đến với KIANA MOD AOV</h2>
-            <p>Đăng ký kênh Youtube</p>
-            <a id="sub-link" href="https://www.youtube.com/channel/UCCKywGTsMdlfBbwnQreTz-A" target="_blank" rel="noopener" class="btn btn-primary btn-full" onclick="window._subDone()">Đăng Ký Kênh</a>
+            <h2>Chao mung ban den voi KIANA MOD</h2>
+            <p>Dang ky kenh YTB de su dung tool mien phi</p>
+            <a id="sub-link" href="https://www.youtube.com/channel/UCCKywGTsMdlfBbwnQreTz-A" target="_blank" rel="noopener" class="btn btn-primary btn-full" onclick="window._subDone()">Dang Ky Kenh</a>
+        </div>
+    </div>
+
+    <div id="btn-modal" class="btn-modal hidden">
+        <div class="btn-modal-overlay" onclick="window._closeBtnModal()"></div>
+        <div class="btn-modal-box">
+            <button class="btn-modal-close" onclick="window._closeBtnModal()">&times;</button>
+            <div id="btn-modal-img-wrap" class="btn-modal-img-wrap">
+                <img id="btn-modal-img" src="" alt="" class="btn-modal-img">
+                <div id="btn-modal-fallback" class="btn-modal-fallback"></div>
+            </div>
+            <div id="btn-modal-name" class="btn-modal-name"></div>
+            <a id="btn-modal-link" href="#" target="_blank" rel="noopener" class="btn btn-primary btn-full">Tải File</a>
         </div>
     </div>
 
@@ -19,12 +32,28 @@
 
     <div class="app">
         <header class="header">
+            <button class="hamburger" onclick="window._toggleMenu()">&#9776;</button>
             <div class="logo">
                 <img src="{{ url_for('static', filename='logo.jpg') }}" alt="logo" class="logo-img">
                 <h1>KIANA MOD</h1>
             </div>
-            <p class="tagline">Mod skin & Cam xa</p>
+            <p class="tagline">Mod skin Lien Quan Mobile mien phi</p>
         </header>
+
+        <nav id="side-menu" class="side-menu">
+            <div class="menu-overlay" onclick="window._toggleMenu()"></div>
+            <div class="menu-panel">
+                <div class="menu-header">
+                    <img src="{{ url_for('static', filename='logo.jpg') }}" alt="logo" class="menu-logo">
+                    <span>KIANA MOD</span>
+                </div>
+                <a class="menu-item" onclick="window._showSection('home')">Tạo Mod Skin và Cam Xa</a>
+                <a class="menu-item" onclick="window._showSection('buttons')">Nút Bấm</a>               
+                <a class="menu-item" onclick="window._showSection('mods')">Mod khác</a>
+                <a class="menu-item" onclick="window._showSection('tutorial')">Hướng Dẫn</a>
+                <a class="menu-item" href="https://www.youtube.com/channel/UCCKywGTsMdlfBbwnQreTz-A" target="_blank">YouTube</a>
+            </div>
+        </nav>
 
         <main class="main">
             <!-- Step 1: Get Key -->
@@ -120,6 +149,60 @@
 
             <div id="error-toast" class="toast hidden"></div>
         </main>
+
+        <!-- Tutorial Section -->
+        <section id="tutorial-section" class="card hidden">
+            <div class="card-header">
+                <span class="step-badge">1</span>
+                <h2>Hướng Dẫn Cài Mod</h2>
+            </div>
+            <a href="https://youtu.be/B8z_nrCqJL0" target="_blank" class="video-link">
+                <img src="https://img.youtube.com/vi/B8z_nrCqJL0/maxresdefault.jpg" alt="Huong dan" class="video-thumb">
+                <div class="video-play">&#9654;</div>
+            </a>
+            <div class="card-header">
+                <span class="step-badge">2</span>
+                <h2>Hướng Dẫn Sử Dụng</h2>
+            </div>
+           <a href="https://youtu.be/d6sZ_41PWoA" target="_blank" class="video-link">
+                <img src="https://img.youtube.com/vi/d6sZ_41PWoA/maxresdefault.jpg" alt="Huong dan" class="video-thumb">
+                <div class="video-play">&#9654;</div>
+            </a>
+        </section>
+
+        <!-- Mods Section -->
+        <section id="mods-section" class="card hidden">
+            <div class="card-header">
+                <span class="step-badge">3</span>
+                <h2>Mods</h2>
+            </div>
+            <div class="mods-grid" id="mods-grid">
+                <a class="mod-card" href="https://link4m.org/KLze5" target="_blank">
+                    <img src="https://img.youtube.com/vi/rTd1VsI6veU/mqdefault.jpg" alt="mod1" class="mod-thumb">
+                    <div class="mod-info">
+                        <div class="mod-name">Mod Nakroth 6IN1</div>
+                        <div class="mod-desc">File Mod</div>
+                    </div>
+                </a>
+                <a class="mod-card" href="https://link4m.net/oeZ7h9" target="_blank">
+                    <img src="https://img.youtube.com/vi/sFmKsZ61U0k/mqdefault.jpg" alt="mod2" class="mod-thumb">
+                    <div class="mod-info">
+                        <div class="mod-name">Mod Florentino 6IN1</div>
+                        <div class="mod-desc">File Mod</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Button Mods Section -->
+        <section id="buttons-section" class="card hidden">
+            <div class="card-header">
+                <span class="step-badge">4</span>
+                <h2>Mod Nút Bấm</h2>
+            </div>
+            <p class="card-desc">Chọn nút bấm để tải về</p>
+            <div class="btn-mods-grid" id="btn-mods-grid"></div>
+        </section>
 
         <div class="announce-box">
             <span id="announce-text">Thông Báo: Game Update vào ngày 23/7, anh em xóa và mod lại file mới để tránh lỗi nha !</span>

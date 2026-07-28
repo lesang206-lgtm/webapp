@@ -45,6 +45,110 @@ body {
 .header {
     text-align: center;
     padding: 28px 0 20px;
+    position: relative;
+}
+
+.hamburger {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.hamburger:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Side Menu */
+.side-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.side-menu.open {
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.menu-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.side-menu.open .menu-overlay {
+    opacity: 1;
+}
+
+.menu-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 260px;
+    background: #12121f;
+    border-right: 1px solid var(--card-border);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.side-menu.open .menu-panel {
+    transform: translateX(0);
+}
+
+body.light .menu-panel {
+    background: #fff;
+}
+
+.menu-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px;
+    border-bottom: 1px solid var(--card-border);
+    font-weight: 700;
+    font-size: 1em;
+    color: var(--text);
+}
+
+.menu-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.menu-item {
+    display: block;
+    padding: 14px 20px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.menu-item:hover {
+    background: rgba(124, 77, 255, 0.1);
+    color: #b388ff;
 }
 
 .logo {
@@ -427,6 +531,263 @@ textarea {
     color: var(--text-dim);
     font-size: 0.8em;
     margin-top: auto;
+}
+
+/* Video */
+.video-link {
+    display: block;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+.video-thumb {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+}
+
+.video-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #000;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.video-link:hover .video-play {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: #fff;
+}
+
+/* Mods Grid */
+.mods-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.mod-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.mod-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+}
+
+.mod-thumb {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+    display: block;
+}
+
+.mod-info {
+    padding: 8px 10px;
+}
+
+.mod-name {
+    font-size: 0.82em;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.mod-desc {
+    font-size: 0.72em;
+    color: var(--text-dim);
+}
+
+/* Button Mods Grid */
+.btn-mods-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.btn-mod-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-mod-item:hover {
+    transform: scale(1.05);
+}
+
+.btn-mod-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.btn-mod-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.btn-mod-name {
+    font-size: 0.75em;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+@media (max-width: 400px) {
+    .btn-mods-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    .btn-mod-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.2em;
+    }
+}
+
+/* Button Mod Modal */
+.btn-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.25s;
+}
+
+.btn-modal.hidden {
+    display: none;
+}
+
+.btn-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.btn-modal-box {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px 20px 20px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: modalIn 0.25s ease;
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.btn-modal-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.6em;
+    color: var(--text-dim);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+}
+
+.btn-modal-close:hover {
+    color: var(--text);
+}
+
+.btn-modal-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 3px solid var(--primary);
+    box-shadow: 0 4px 20px rgba(124, 77, 255, 0.3);
+}
+
+.btn-modal-img-wrap {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 14px;
+    position: relative;
+}
+
+.btn-modal-img.hidden {
+    display: none;
+}
+
+.btn-modal-fallback {
+    display: none;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.btn-modal-fallback.show {
+    display: flex;
+}
+
+.btn-modal-name {
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.4;
 }
 
 /* Ad Box */
