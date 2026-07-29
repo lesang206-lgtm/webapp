@@ -50,15 +50,14 @@ body {
 
 .hamburger {
     position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 4px;
+    top: 36px;
     background: none;
     border: none;
     color: var(--text);
-    font-size: 1.5em;
+    font-size: 1.4em;
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 6px;
     border-radius: 6px;
     transition: background 0.2s;
 }
