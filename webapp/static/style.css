@@ -51,7 +51,7 @@ body {
 .hamburger {
     position: absolute;
     left: 4px;
-    top: 36px;
+    top: 18px;
     background: none;
     border: none;
     color: var(--text);
