@@ -49,7 +49,7 @@
 10807: Phù thủy Ba Tư
 10809: Xích Long
 10811: PASULOL
-10812: Enyoji ji
+10812: jiji
 
 109: Veera
 10901: Cô giáo hắc ám
