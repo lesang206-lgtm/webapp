@@ -70,7 +70,7 @@ class KeyManager:
             return None
         try:
             api_url = f'https://link4m.co/api-shorten/v2?api={token}&url={url}'
-            resp = requests.get(api_url, timeout=10)
+            resp = requests.get(api_url, timeout=5)
             if resp.status_code == 200:
                 data = resp.json()
                 return data.get('shortenedUrl')
