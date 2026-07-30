@@ -119,11 +119,12 @@ def create_mod():
     skin_ids = data.get('skin_ids', [])
     cam_xa = data.get('cam_xa_percent')
     hd_mode = data.get('hd_mode', False)
+    button_mod = data.get('button_mod')
 
     if not skin_ids and not cam_xa:
         return jsonify({'status': 'error', 'message': 'Nhap skin ID hoac cam xa!'}), 400
 
-    job_id = mod_runner.create_job(skin_ids, cam_xa, hd_mode)
+    job_id = mod_runner.create_job(skin_ids, cam_xa, hd_mode, button_mod)
 
     t = threading.Thread(target=mod_runner.run_job, args=(job_id,), daemon=True)
     t.start()
@@ -165,6 +166,16 @@ def download(job_id):
                          download_name=f'{display_name}.zip')
 
     return jsonify({'status': 'error', 'message': 'Loi tao file'}), 500
+
+
+@app.route('/api/button-mods-list')
+def button_mods_list():
+    mods_json = BASE_DIR / 'webapp' / 'button_mods.json'
+    if not mods_json.exists():
+        return jsonify([])
+    with open(mods_json, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return jsonify([{'name': k} for k in data.keys()])
 
 
 @app.route('/api/button-mods')

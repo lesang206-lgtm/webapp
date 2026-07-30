@@ -30,6 +30,8 @@
 
     <button id="theme-toggle" class="theme-toggle" onclick="window._toggleTheme()">&#9790;</button>
 
+    <audio id="bgm" src="https://download2268.mediafire.com/n4oik6muqzmg1R75se9VK_5HXEX5btEEyqV_xKKDIe1b4j0xX809dfhjzUAy6xtR00_sjVbsP7xg1uyI_vx-LVATiVl_Np99u73SfsKw0kw_FC0MLkAbwB2V7yBGb4f0saVjG_MTcrXviUlG-6d4EgDQsXLKpr2HiVLN0Huw0PfHpA/41u9ebml29gznvq/nhac+sanh+nen+tet+lq+2021.mp3" loop preload="auto"></audio>
+
     <div class="app">
         <header class="header">
             <button class="hamburger" onclick="window._toggleMenu()">&#9776;</button>
@@ -110,9 +112,22 @@
                     <input type="number" id="cam-xa" min="0" max="300" placeholder="VD: 25">
                 </div>
 
-                <div class="form-check">
-                    <input type="checkbox" id="hd-mode">
-                    <label for="hd-mode">Mod HD</label>
+                <div class="form-check-row">
+                    <div class="form-check">
+                        <input type="checkbox" id="hd-mode">
+                        <label for="hd-mode">Mod HD</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" id="btn-mod-check">
+                        <label for="btn-mod-check">Mod Nút Bấm</label>
+                    </div>
+                </div>
+
+                <div class="form-group hidden" id="btn-mod-select-wrap">
+                    <label for="btn-mod-select">Chọn nút bấm</label>
+                    <select id="btn-mod-select" class="form-select">
+                        <option value="">-- Chọn nút bấm --</option>
+                    </select>
                 </div>
 
                 <button id="btn-mod" class="btn btn-primary btn-full">
@@ -205,7 +220,7 @@
         </section>
 
         <div class="announce-box">
-            <span id="announce-text">Thông Báo: Game Update vào ngày <b>23/7</b>, anh em xóa và mod lại file mới để tránh lỗi nha !</span>
+            <span id="announce-text">Thông Báo: Game Update vào ngày <b>30/7</b>, anh em xóa và mod lại file mới để tránh lỗi nha !</span>
         </div>
 
         <footer class="footer">

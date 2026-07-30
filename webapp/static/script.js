@@ -47,6 +47,14 @@
         localStorage.setItem('kiana_theme', isLight ? 'light' : 'dark');
     };
 
+    const bgm = $('bgm');
+    if (bgm) {
+        bgm.volume = 0.5;
+        document.addEventListener('click', () => {
+            if (bgm.paused) bgm.play().catch(() => {});
+        }, { once: true });
+    }
+
     // Subscribe popup - hien moi ngay 1 lan
     const today = new Date().toISOString().slice(0, 10);
     const subDate = localStorage.getItem('kiana_sub_date');
@@ -221,6 +229,7 @@
             .filter((s) => s && /^\d+$/.test(s));
         const cam = camXa.value ? parseInt(camXa.value) : null;
         const hd = hdMode.checked;
+        const btnModVal = $('btn-mod-check').checked ? $('btn-mod-select').value : null;
 
         if (!ids.length && !cam) {
             showToast('Nhap skin ID hoac cam xa!');
@@ -233,7 +242,7 @@
             const res = await fetch('/api/mod', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ skin_ids: ids, cam_xa_percent: cam, hd_mode: hd }),
+                body: JSON.stringify({ skin_ids: ids, cam_xa_percent: cam, hd_mode: hd, button_mod: btnModVal }),
             });
             const data = await res.json();
 
@@ -291,6 +300,9 @@
         skinIds.value = '';
         camXa.value = '';
         hdMode.checked = false;
+        $('btn-mod-check').checked = false;
+        $('btn-mod-select-wrap').classList.add('hidden');
+        $('btn-mod-select').value = '';
         selectedSkins.clear();
         renderTags();
         skinSearch.value = '';
@@ -303,6 +315,23 @@
         modSection.classList.remove('hidden');
         progressSection.classList.add('hidden');
         downloadSection.classList.add('hidden');
+        loadButtonModsList();
+    }
+
+    $('btn-mod-check').addEventListener('change', function() {
+        $('btn-mod-select-wrap').classList.toggle('hidden', !this.checked);
+    });
+
+    async function loadButtonModsList() {
+        try {
+            const res = await fetch('/api/button-mods-list');
+            const mods = await res.json();
+            const sel = $('btn-mod-select');
+            sel.innerHTML = '<option value="">-- Chọn nút bấm --</option>';
+            mods.forEach(m => {
+                sel.innerHTML += `<option value="${m.name}">${m.name}</option>`;
+            });
+        } catch {}
     }
 
     function showProgressSection() {

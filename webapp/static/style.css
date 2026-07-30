@@ -394,6 +394,16 @@ textarea {
     margin-bottom: 16px;
 }
 
+.form-check-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-check-row .form-check {
+    margin-bottom: 0;
+}
+
 .form-check input[type="checkbox"] {
     width: 18px;
     height: 18px;
@@ -404,6 +414,23 @@ textarea {
     font-size: 0.9em;
     color: var(--text-dim);
     cursor: pointer;
+}
+
+.form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.9em;
+    outline: none;
+    cursor: pointer;
+    appearance: auto;
+}
+
+.form-select:focus {
+    border-color: var(--primary);
 }
 
 /* Key Info */

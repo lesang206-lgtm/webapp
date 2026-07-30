@@ -25,3 +25,4 @@ GDRIVE_V7_ID = os.environ.get('GDRIVE_V7_ID', '1EV7nWY8pHfhACm8cZDIa5ZWqOKgKuBsL
 BUTTON_MOD_DIR = BASE_DIR / "File_Mod" / "mod" / "nut bấm"
 BTN_SKIN_DIR = BASE_DIR / "webapp" / "static" / "btn_skin"
 BTN_SKIN_DIR.mkdir(exist_ok=True)
+BUTTON_MODS_JSON = BASE_DIR / "webapp" / "button_mods.json"

@@ -2,11 +2,14 @@ import os
 import sys
 import json
 import shutil
+import zipfile
 import subprocess
 import threading
 import tempfile
 from pathlib import Path
 from datetime import datetime
+
+import gdown
 
 _worker_semaphore = threading.Semaphore(3)
 
@@ -18,7 +21,7 @@ class ModRunner:
         self.kiana_dir = Path(kiana_dir)
         self.jobs_dir.mkdir(exist_ok=True)
 
-    def create_job(self, skin_ids, cam_xa_percent=None, hd_mode=False):
+    def create_job(self, skin_ids, cam_xa_percent=None, hd_mode=False, button_mod=None):
         job_id = datetime.now().strftime('%Y%m%d_%H%M%S') + '_' + os.urandom(4).hex()
         job_dir = self.jobs_dir / job_id
         job_dir.mkdir(exist_ok=True)
@@ -36,6 +39,7 @@ class ModRunner:
             'skin_ids': skin_ids,
             'cam_xa_percent': cam_xa_percent,
             'hd_mode': hd_mode,
+            'button_mod': button_mod,
             'created_at': datetime.now().isoformat(),
             'output_path': None,
             'error': None,
@@ -131,6 +135,10 @@ class ModRunner:
             shutil.move(str(output_path), str(final_output))
 
             self._fix_double_nesting(final_output)
+
+            if job.get('button_mod'):
+                self._merge_button_mod(final_output, job['button_mod'])
+
             job['output_path'] = str(final_output)
             job['folder_name'] = folder_name
             job['display_name'] = self._make_display_name(final_output, job)
@@ -156,6 +164,63 @@ class ModRunner:
             shutil.move(str(item), str(dest))
         shutil.rmtree(nested_res)
 
+    def _merge_button_mod(self, output_path, button_mod_name):
+        print(f"  Merging button mod: {button_mod_name}")
+        mods_json = Path(__file__).parent / 'button_mods.json'
+        if not mods_json.exists():
+            print("  button_mods.json not found, skipping")
+            return
+        with open(mods_json, 'r', encoding='utf-8') as f:
+            all_mods = json.load(f)
+        gdrive_id = all_mods.get(button_mod_name)
+        if not gdrive_id:
+            print(f"  Button mod '{button_mod_name}' not found, skipping")
+            return
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix='btnmod_'))
+        try:
+            zip_path = tmp_dir / 'btn_mod.zip'
+            url = f'https://drive.google.com/uc?export=download&id={gdrive_id}'
+            gdown.download(url, str(zip_path), quiet=False)
+            if not zip_path.exists() or zip_path.stat().st_size == 0:
+                print("  Download failed, skipping button mod")
+                return
+
+            extract_dir = tmp_dir / 'extracted'
+            with zipfile.ZipFile(zip_path, 'r') as zf:
+                zf.extractall(extract_dir)
+
+            btn_res = None
+            for p in extract_dir.rglob('Resources'):
+                if p.is_dir() and any(p.iterdir()):
+                    btn_res = p
+                    break
+
+            if not btn_res:
+                print("  No Resources found in button mod zip")
+                return
+
+            output_res = output_path / 'Resources'
+            if not output_res.exists():
+                output_res.mkdir(parents=True)
+
+            self._merge_dirs(btn_res, output_res)
+
+            print(f"  Button mod merged successfully")
+        finally:
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    def _merge_dirs(self, src, dst):
+        for item in src.iterdir():
+            dest = dst / item.name
+            if item.is_dir():
+                if not dest.exists():
+                    dest.mkdir()
+                self._merge_dirs(item, dest)
+            else:
+                if not dest.exists():
+                    shutil.copy2(str(item), str(dest))
+
     def _make_display_name(self, output_path, job):
         skin_names = []
         skin_list_file = output_path / 'danhsachskin.txt'
@@ -180,6 +245,10 @@ class ModRunner:
             name = f'cam xa {cam}%'
         else:
             name = 'mod'
+
+        btn = job.get('button_mod')
+        if btn:
+            name += f' + {btn}'
 
         return name
 
