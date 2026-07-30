@@ -47,13 +47,17 @@
         localStorage.setItem('kiana_theme', isLight ? 'light' : 'dark');
     };
 
-    const bgm = $('bgm');
-    if (bgm) {
-        bgm.volume = 0.5;
-        document.addEventListener('click', () => {
-            if (bgm.paused) bgm.play().catch(() => {});
-        }, { once: true });
+    function tryPlayBgm() {
+        const iframe = $('bgm');
+        if (!iframe) return;
+        if (typeof SC !== 'undefined' && SC.Widget) {
+            const widget = SC.Widget(iframe);
+            widget.bind(SC.Widget.Events.READY, () => { widget.play(); });
+        } else {
+            setTimeout(tryPlayBgm, 1000);
+        }
     }
+    tryPlayBgm();
 
     // Subscribe popup - hien moi ngay 1 lan
     const today = new Date().toISOString().slice(0, 10);
