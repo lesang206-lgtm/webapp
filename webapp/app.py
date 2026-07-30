@@ -162,8 +162,27 @@ def download(job_id):
     result = mod_runner.create_download_zip(job_id)
     if result and result[0].exists():
         zip_path, display_name = result
-        return send_file(zip_path, as_attachment=True,
-                         download_name=f'{display_name}.zip')
+        response = send_file(zip_path, as_attachment=True,
+                             download_name=f'{display_name}.zip')
+
+        @response.call_on_close
+        def cleanup():
+            try:
+                import threading
+                def delayed_delete():
+                    import time
+                    time.sleep(5)
+                    if zip_path.exists():
+                        zip_path.unlink()
+                    job_dir = mod_runner.jobs_dir / job_id
+                    if job_dir.exists():
+                        import shutil
+                        shutil.rmtree(job_dir, ignore_errors=True)
+                threading.Thread(target=delayed_delete, daemon=True).start()
+            except Exception:
+                pass
+
+        return response
 
     return jsonify({'status': 'error', 'message': 'Loi tao file'}), 500
 
