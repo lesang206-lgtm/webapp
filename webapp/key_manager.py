@@ -46,7 +46,14 @@ class KeyManager:
             else:
                 del self.db[key]
                 self._save_db()
-        return False
+        expected = self._compute_key(ip)
+        return key == expected
+
+    def _compute_key(self, ip):
+        ngay = int(datetime.now().day)
+        key1 = str(ngay * 27 + 27)
+        ip_numbers = ''.join(filter(str.isdigit, ip))
+        return f'NDK{key1}{ip_numbers}'
 
     def save_key(self, ip, key, expiration):
         self.db[key] = {
