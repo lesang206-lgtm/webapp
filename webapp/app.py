@@ -49,9 +49,13 @@ def load_skins():
 
 load_skins()
 
+IS_UPDATING = not KIANA_AOV_DIR.exists() or not (KIANA_AOV_DIR / 'Resources').exists()
+
 
 @app.route('/')
 def index():
+    if IS_UPDATING:
+        return render_template('updating.html')
     return render_template('index.html')
 
 
